@@ -5,6 +5,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { IconBrandGoogle } from "@tabler/icons-react";
+import { emailPasswordSignUp } from "supertokens-web-js/recipe/thirdpartyemailpassword";
 
 import { useRouter } from "next/navigation";
 
@@ -37,7 +38,7 @@ export default function Home() {
 
       <Tabs
         defaultValue="Login"
-        className="lg:w-4/12 lg:h-4/6 md:border-2 md:rounded-xl md:border-slate-700"
+        className="lg:w-4/12 lg:h-4/6 md:border-2 md:rounded-xl md:border-slate-700 md:w-4/12 md:static md:top-0 w-8/12 fixed top-40"
       >
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="Login">Log In</TabsTrigger>
