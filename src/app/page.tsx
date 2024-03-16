@@ -6,7 +6,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { IconBrandGoogle } from "@tabler/icons-react";
-import { Result } from "postcss";
 import { useState } from "react";
 import { emailPasswordSignUp } from "supertokens-web-js/recipe/thirdpartyemailpassword";
 
@@ -65,6 +64,7 @@ export default function Home() {
             return {
               title: "Error",
               description: formField.error,
+              variant: "destructive",
             };
           } else if (formField.id === "password") {
             // Password validation failed.
@@ -73,6 +73,7 @@ export default function Home() {
             return {
               title: "Error",
               description: formField.error,
+              variant: "destructive",
             };
           }
         });
@@ -83,6 +84,7 @@ export default function Home() {
         return {
           title: "Error",
           description: "Go through the password reset flow",
+          variant: "destructive",
         };
       } else {
         // sign up successful. The session tokens are automatically handled by
@@ -97,17 +99,20 @@ export default function Home() {
 
         return {
           title: "Error",
+          variant: "destructive",
           description: err.message,
         };
       } else {
         return {
           title: "Error",
+          variant: "destructive",
           description: "Oops! Something went wrong.",
         };
       }
     }
     return {
       title: "Error",
+      variant: "destructive",
       description: "Oops! Something went wrong.",
     };
   };
@@ -215,7 +220,7 @@ export default function Home() {
             <button
               className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
               onClick={async () => {
-                handlesignup().then((result): any => {
+                handlesignup().then((result: object): any => {
                   if (Object.keys(result).length == 1) {
                     // do the redirection here
                   } else {
