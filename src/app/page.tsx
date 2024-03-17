@@ -7,8 +7,8 @@ import { cn } from "@/lib/utils";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { IconBrandGoogle } from "@tabler/icons-react";
 import { useState } from "react";
-import { emailPasswordSignUp } from "supertokens-web-js/recipe/thirdpartyemailpassword";
-
+import { handlesignup, handleLogin } from "./handle";
+import { Result } from "postcss";
 const LabelInputContainer = ({
   children,
   className,
@@ -36,86 +36,7 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { toast } = useToast();
-  const handlesignup = async function (): Promise<object> {
-    console.log("hello");
-    let trigger: boolean = false;
-    try {
-      let response = await emailPasswordSignUp({
-        formFields: [
-          {
-            id: "email",
-            value: email,
-          },
-          {
-            id: "password",
-            value: password,
-          },
-        ],
-      });
 
-      if (response.status === "FIELD_ERROR") {
-        // one of the input formFields failed validaiton
-
-        response.formFields.forEach((formField) => {
-          if (formField.id === "email") {
-            // Email validation failed (for example incorrect email syntax),
-            // or the email is not unique.
-
-            return {
-              title: "Error",
-              description: formField.error,
-              variant: "destructive",
-            };
-          } else if (formField.id === "password") {
-            // Password validation failed.
-            // Maybe it didn't match the password strength
-
-            return {
-              title: "Error",
-              description: formField.error,
-              variant: "destructive",
-            };
-          }
-        });
-      } else if (response.status === "SIGN_UP_NOT_ALLOWED") {
-        // this can happen during automatic account linking. Tell the user to use another
-        // login method, or go through the password reset flow.
-
-        return {
-          title: "Error",
-          description: "Go through the password reset flow",
-          variant: "destructive",
-        };
-      } else {
-        // sign up successful. The session tokens are automatically handled by
-        // the frontend SDK.
-        return {
-          title: "Success",
-        };
-      }
-    } catch (err: any) {
-      if (err.isSuperTokensGeneralError === true) {
-        // this may be a custom error message sent from the API by you.
-
-        return {
-          title: "Error",
-          variant: "destructive",
-          description: err.message,
-        };
-      } else {
-        return {
-          title: "Error",
-          variant: "destructive",
-          description: "Oops! Something went wrong.",
-        };
-      }
-    }
-    return {
-      title: "Error",
-      variant: "destructive",
-      description: "Oops! Something went wrong.",
-    };
-  };
   return (
     <div className="h-screen w-full dark:bg-black bg-white  dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative flex items-center justify-center">
       <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
@@ -167,7 +88,16 @@ export default function Home() {
 
             <button
               className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-              type="submit"
+              onClick={() => {
+                handleLogin(email, password).then((result: object): any => {
+                  if (Object.keys(result).length == 1) {
+                  } else if (Object.keys(result).length == 2) {
+                    toast(result);
+                  } else {
+                    toast(result);
+                  }
+                });
+              }}
             >
               Login &rarr;
               <BottomGradient />
@@ -219,8 +149,8 @@ export default function Home() {
 
             <button
               className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-              onClick={async () => {
-                handlesignup().then((result: object): any => {
+              onClick={() => {
+                handlesignup(email, password).then((result: object): any => {
                   if (Object.keys(result).length == 1) {
                     // do the redirection here
                   } else {
