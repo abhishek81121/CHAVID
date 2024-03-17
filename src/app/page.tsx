@@ -8,7 +8,9 @@ import { TabsContent } from "@radix-ui/react-tabs";
 import { IconBrandGoogle } from "@tabler/icons-react";
 import { useState } from "react";
 import { handlesignup, handleLogin } from "./handle";
-import { Result } from "postcss";
+import { getAuthorisationURLWithQueryParamsAndSetState } from "supertokens-web-js/recipe/thirdpartyemailpassword";
+import { useRouter } from "next/navigation";
+
 const LabelInputContainer = ({
   children,
   className,
@@ -36,6 +38,7 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { toast } = useToast();
+  const router = useRouter();
 
   return (
     <div className="h-screen w-full dark:bg-black bg-white  dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative flex items-center justify-center">
@@ -56,7 +59,29 @@ export default function Home() {
             <div className="flex flex-col space-y-4">
               <button
                 className=" relative group/btn flex space-x-2 items-center justify-center px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-                type="submit"
+                onClick={async () => {
+                  try {
+                    const authUrl =
+                      await getAuthorisationURLWithQueryParamsAndSetState({
+                        thirdPartyId: "google",
+
+                        frontendRedirectURI:
+                          "http://localhost:3000/auth/callback/google",
+                      });
+
+                    router.push(authUrl);
+                  } catch (err: any) {
+                    if (err.isSuperTokensGeneralError === true) {
+                      toast({
+                        title: "Error",
+                        variant: "destructive",
+                        description: err.message,
+                      });
+                    } else {
+                      console.log(err);
+                    }
+                  }
+                }}
               >
                 <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
                 <span className="text-neutral-700 dark:text-neutral-300 text-sm">

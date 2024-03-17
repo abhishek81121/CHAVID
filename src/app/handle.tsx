@@ -5,8 +5,6 @@ export const handlesignup = async function (
   email: string,
   password: string
 ): Promise<object> {
-  console.log("hello");
-  let trigger: boolean = false;
   try {
     let response = await emailPasswordSignUp({
       formFields: [
@@ -156,3 +154,4 @@ export const handleLogin = async function name(
     desc: "Something went wrong",
   };
 };
+export const handleGoogleLogin = async function () {};
